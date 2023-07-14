@@ -7,11 +7,13 @@ def find_video_files(folder):
     video_files = []
 
     for root, dirs, files in os.walk(folder):
-        for file in files:
-            if any(file.endswith(ext) for ext in video_extensions):
-                video_files.append(os.path.join(root, file))
+        if not any(folder.endswith('.fcpbundle') or folder.endswith('.fcpxmld') for folder in root.split(os.sep)):
+            for file in files:
+                if any(file.endswith(ext) for ext in video_extensions):
+                    video_files.append(os.path.join(root, file))
 
     return video_files
+
 
 # User input for folder paths
 print("Enter the folder paths to search for video files (one per line).")
@@ -33,6 +35,7 @@ for folder_path in folder_paths:
         print(f"Calculating total duration for {folder_path}...")
 
         for video_file in videos:
+
             # Read metadata for the current video file
             metadata = ffmpeg.probe(video_file)
 
